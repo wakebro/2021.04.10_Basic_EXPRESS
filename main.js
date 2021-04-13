@@ -5,16 +5,15 @@ const path = require("path");
 const qs = require("querystring");
 const bodyParser = require("body-parser");
 const sanitizeHtml = require("sanitize-html");
-const template = require("./lib/template.js");
 const compression = require("compression");
+const template = require("./lib/template.js");
 const port = 3000;
 
 // 미들웨어 추가
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(compression());
 // 미들웨어 생성
-// app.get("*",()=>{})
-// get방식으로 들어오는 요청에 대해서만 처리
+// app.get("*",()=>{})_get방식으로 들어오는 요청에 대해서만 처리
 app.get("*", (request, response, next) => {
   fs.readdir("./data", function (error, filelist) {
     request.list = filelist;
@@ -40,27 +39,31 @@ app.get("/", (request, response) => {
   response.send(html);
 });
 
-app.get("/page/:pageId/", (request, response) => {
+app.get("/page/:pageId/", (request, response, next) => {
   var filteredId = path.parse(request.params.pageId).base;
   fs.readFile(`data/${filteredId}`, "utf8", function (err, description) {
-    var title = request.params.pageId;
-    var sanitizedTitle = sanitizeHtml(title);
-    var sanitizedDescription = sanitizeHtml(description, {
-      allowedTags: ["h1"],
-    });
-    var list = template.list(request.list);
-    var html = template.HTML(
-      sanitizedTitle,
-      list,
-      `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
-      ` <a href="/create">create</a>
-          <a href="/update/${sanitizedTitle}">update</a>
-          <form action="/delete_process" method="post">
-            <input type="hidden" name="id" value="${sanitizedTitle}">
-            <input type="submit" value="delete">
-          </form>`
-    );
-    response.send(html);
+    if (err) {
+      next(err);
+    } else {
+      var title = request.params.pageId;
+      var sanitizedTitle = sanitizeHtml(title);
+      var sanitizedDescription = sanitizeHtml(description, {
+        allowedTags: ["h1"],
+      });
+      var list = template.list(request.list);
+      var html = template.HTML(
+        sanitizedTitle,
+        list,
+        `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
+        ` <a href="/create">create</a>
+            <a href="/update/${sanitizedTitle}">update</a>
+            <form action="/delete_process" method="post">
+              <input type="hidden" name="id" value="${sanitizedTitle}">
+              <input type="submit" value="delete">
+            </form>`
+      );
+      response.send(html);
+    }
   });
 });
 
@@ -141,6 +144,17 @@ app.post("/delete_process", (request, response) => {
   fs.unlink(`data/${filteredId}`, function (error) {
     response.redirect("/");
   });
+});
+
+// 없는 페이지 오류 처리
+app.use((request, response, next) => {
+  response.status(404).send(`Sorry, I can't find it!`);
+});
+
+// next(err)
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 app.listen(port, () => {
