@@ -21,6 +21,8 @@ app.get("*", (request, response, next) => {
     next();
   });
 });
+// Static files service
+app.use(express.static("public"));
 
 app.get("/", (request, response) => {
   var title = "Welcome";
@@ -29,7 +31,10 @@ app.get("/", (request, response) => {
   var html = template.HTML(
     title,
     list,
-    `<h2>${title}</h2>${description}`,
+    `
+    <h2>${title}</h2>${description}
+    <img src="images/hello.jpg" style="width:300px; display:block; margin-top:10px;">
+    `,
     `<a href="/create">create</a>`
   );
   response.send(html);
