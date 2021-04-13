@@ -4,11 +4,14 @@ const fs = require("fs");
 const path = require("path");
 const qs = require("querystring");
 const bodyParser = require("body-parser");
+const require('compression')
 var sanitizeHtml = require("sanitize-html");
 var template = require("./lib/template.js");
+const compression = require('compression');
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(compression())
 
 app.get("/", (request, response) => {
   fs.readdir("./data", function (error, filelist) {
