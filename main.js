@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const compression = require("compression");
 const indexRouter = require("./routes/index");
 const topicRouter = require("./routes/topic");
+const helmet = require("helmet");
 const port = 3000;
 
 // 미들웨어 추가
@@ -20,7 +21,9 @@ app.get("*", (request, response, next) => {
 });
 // Static files service
 app.use(express.static("public"));
-// 라우터 불러오기
+// Security helmet 사용
+app.use(helmet());
+// 라우터 모듈 불러오기
 app.use("/", indexRouter);
 app.use("/topic", topicRouter);
 
