@@ -4,6 +4,7 @@
 
 ## 기술
 
+- NodeJS
 - EXPRESS
   - EXPRESS_Middle ware : Body parser
   - EXPRESS_Middle ware : Compression
