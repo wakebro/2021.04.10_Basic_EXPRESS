@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const compression = require("compression");
 const indexRouter = require("./routes/index");
 const topicRouter = require("./routes/topic");
+const authRouter = require("./routes/auth");
 const helmet = require("helmet");
 const port = 3000;
 
@@ -26,6 +27,7 @@ app.use(helmet());
 // 라우터 모듈 불러오기
 app.use("/", indexRouter);
 app.use("/topic", topicRouter);
+app.use("/auth", authRouter);
 
 // 없는 페이지 오류 처리
 app.use((request, response, next) => {
