@@ -3,15 +3,29 @@ const app = express();
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const compression = require("compression");
+const helmet = require("helmet");
+const port = 3000;
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
 const indexRouter = require("./routes/index");
 const topicRouter = require("./routes/topic");
 const authRouter = require("./routes/auth");
-const helmet = require("helmet");
-const port = 3000;
 
+// Static files service
+app.use(express.static("public"));
 // 미들웨어 추가
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(compression());
+
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore(),
+  })
+);
+
 // 미들웨어 생성
 // app.get("*",()=>{})_get방식으로 들어오는 요청에 대해서만 처리
 app.get("*", (request, response, next) => {
@@ -20,8 +34,7 @@ app.get("*", (request, response, next) => {
     next();
   });
 });
-// Static files service
-app.use(express.static("public"));
+
 // Security helmet 사용
 app.use(helmet());
 // 라우터 모듈 불러오기
