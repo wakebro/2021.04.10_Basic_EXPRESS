@@ -8,3 +8,5 @@
 - EXPRESS
   - EXPRESS_Middle ware : Body parser
   - EXPRESS_Middle ware : Compression
+  - EXPRESS_Middle ware : Session
+- PASSPORT

@@ -24,6 +24,11 @@ app.use(
     store: new FileStore(),
   })
 );
+
+// session 이후에 동작하므로 session 다음에 선언
+var passport = require("passport"),
+  LocalStrategy = require("passport-local").Strategy;
+
 // app.get("*",()=>{})_get방식으로 들어오는 요청에 대해서만 처리
 app.get("*", (request, response, next) => {
   fs.readdir("./data", function (error, filelist) {
