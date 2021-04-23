@@ -4,9 +4,13 @@ const fs = require("fs");
 const sanitizeHtml = require("sanitize-html");
 const template = require("../lib/template.js");
 const router = express.Router();
-const auth = require("../lib/auth");
+const auth = require("../lib/auth.js");
 
 router.get("/create", (request, response) => {
+  if (!auth.isOwner(request, response)) {
+    response.redirect("/");
+    return false;
+  }
   var title = "WEB - create";
   var list = template.list(request.list);
   var html = template.HTML(
@@ -30,6 +34,10 @@ router.get("/create", (request, response) => {
 });
 
 router.post("/create_process", (request, response) => {
+  if (!auth.isOwner(request, response)) {
+    response.redirect("/");
+    return false;
+  }
   var post = request.body;
   var title = post.title;
   var description = post.description;
@@ -40,6 +48,10 @@ router.post("/create_process", (request, response) => {
 });
 
 router.get("/update/:pageId", (request, response) => {
+  if (!auth.isOwner(request, response)) {
+    response.redirect("/");
+    return false;
+  }
   var filteredId = path.parse(request.params.pageId).base;
   fs.readFile(`data/${filteredId}`, "utf8", function (err, description) {
     var title = request.params.pageId;
@@ -67,6 +79,10 @@ router.get("/update/:pageId", (request, response) => {
 });
 
 router.post("/update_process", (request, response) => {
+  if (!auth.isOwner(request, response)) {
+    response.redirect("/");
+    return false;
+  }
   var post = request.body;
   var id = post.id;
   var title = post.title;
@@ -79,6 +95,10 @@ router.post("/update_process", (request, response) => {
 });
 
 router.post("/delete_process", (request, response) => {
+  if (!auth.isOwner(request, response)) {
+    response.redirect("/");
+    return false;
+  }
   var post = request.body;
   var id = post.id;
   var filteredId = path.parse(id).base;
