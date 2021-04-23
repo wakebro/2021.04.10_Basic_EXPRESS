@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const sanitizeHtml = require("sanitize-html");
 const template = require("../lib/template.js");
+const session = require("express-session");
 
 const authData = {
   email: "test@test.com",
@@ -41,6 +42,12 @@ router.post("/login_process", (request, response) => {
     response.end("Who?");
   }
   //response.end();
+});
+
+router.get("/logout", (request, response) => {
+  request.session.destroy((err) => {
+    response.redirect("/");
+  });
 });
 
 /*

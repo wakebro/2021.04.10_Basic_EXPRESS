@@ -16,7 +16,6 @@ app.use(express.static("public"));
 // 미들웨어 추가
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(compression());
-
 app.use(
   session({
     secret: "keyboard cat",
@@ -25,8 +24,6 @@ app.use(
     store: new FileStore(),
   })
 );
-
-// 미들웨어 생성
 // app.get("*",()=>{})_get방식으로 들어오는 요청에 대해서만 처리
 app.get("*", (request, response, next) => {
   fs.readdir("./data", function (error, filelist) {

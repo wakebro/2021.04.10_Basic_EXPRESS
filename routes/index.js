@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const template = require("../lib/template.js");
-const auth = require("../lib/auth");
+const auth = require("../lib/auth.js");
 
 router.get("/", (request, response) => {
+  console.log(request.session);
   var title = "Welcome";
   var description = "Hello, Node.js";
   var list = template.list(request.list);
