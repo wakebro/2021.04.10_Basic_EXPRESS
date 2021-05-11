@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const port = 3000;
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
+const flash = require("connect-flash");
 
 // Static files service
 app.use(express.static("public"));
@@ -21,6 +22,17 @@ app.use(
     store: new FileStore(),
   })
 );
+app.use(flash());
+app.get("/flash", function (req, res) {
+  // Set a flash message by passing the key, followed by the value, to req.flash().
+  req.flash("msg", "Flash is back!!");
+  res.send("flash");
+});
+
+app.get("/flash-display", function (req, res) {
+  // Get an array of flash messages by passing the key to req.flash()
+  res.render("index", { messages: req.flash("info") });
+});
 
 // passport에 사용
 const authData = {
@@ -81,6 +93,8 @@ app.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/auth/login",
+    failureFlash: true,
+    successFlash: true,
   })
 );
 

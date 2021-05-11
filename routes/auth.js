@@ -16,17 +16,23 @@ const authData = {
 */
 
 router.get("/login", (request, response) => {
+  var fmsg = request.flash();
+  var feedbak = "";
+  if (fmsg.error) {
+    feedbak = fmsg.error[0];
+  }
   var title = "WEB - login";
   var list = template.list(request.list);
   var html = template.HTML(
     title,
     list,
     `
-        <form action="/auth/login_process" method="post">
-          <p><input type="email" name="email" placeholder="email"></p>
-          <p><input type="password" name="pwd" placeholder="password"></p>
-          <p><input type="submit" value='login'></p>
-        </form>
+      <div style="color:blue;">${feedbak}</div>
+      <form action="/auth/login_process" method="post">
+        <p><input type="email" name="email" placeholder="email"></p>
+        <p><input type="password" name="pwd" placeholder="password"></p>
+        <p><input type="submit" value='login'></p>
+      </form>
     `,
     ""
   );

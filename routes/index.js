@@ -5,6 +5,11 @@ let auth = require("../lib/auth.js");
 
 router.get("/", (request, response) => {
   console.log("/", request.user);
+  var fmsg = request.flash();
+  var feedbak = "";
+  if (fmsg.success) {
+    feedbak = fmsg.success[0];
+  }
   var title = "Welcome";
   var description = "Hello, Node.js";
   var list = template.list(request.list);
