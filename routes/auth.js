@@ -6,11 +6,14 @@ const sanitizeHtml = require("sanitize-html");
 const template = require("../lib/template.js");
 const session = require("express-session");
 
+// passpoart로 변경
+/*
 const authData = {
   email: "test@test.com",
   password: "111111",
   nickname: "tester",
 };
+*/
 
 router.get("/login", (request, response) => {
   var title = "WEB - login";
@@ -24,12 +27,14 @@ router.get("/login", (request, response) => {
           <p><input type="password" name="pwd" placeholder="password"></p>
           <p><input type="submit" value='login'></p>
         </form>
-      `,
+    `,
     ""
   );
   response.send(html);
 });
 
+// login_process를 passport로 변경
+/*
 router.post("/login_process", (request, response) => {
   var post = request.body;
   var email = post.email;
@@ -46,9 +51,14 @@ router.post("/login_process", (request, response) => {
   }
   //response.end();
 });
+*/
 
 router.get("/logout", (request, response) => {
-  request.session.destroy((err) => {
+  request.logOut();
+  // request.session.destroy((err) => {
+  //   response.redirect("/");
+  // });
+  request.session.save(() => {
     response.redirect("/");
   });
 });
